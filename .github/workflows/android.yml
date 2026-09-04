@@ -25,13 +25,24 @@ jobs:
         distribution: 'temurin'
         cache: gradle
         
+    - name: Check for lock file
+      id: check-lock
+      run: |
+        if [ -f package-lock.json ] || [ -f yarn.lock ] || [ -f npm-shrinkwrap.json ]; then
+          echo "exists=true" >> $GITHUB_OUTPUT
+        else
+          echo "exists=false" >> $GITHUB_OUTPUT
+        fi
+
     - name: Set up Node.js
+      if: steps.check-lock.outputs.exists == 'true'
       uses: actions/setup-node@v4
       with:
         node-version: '18'
         cache: 'npm'
         
     - name: Install dependencies
+      if: steps.check-lock.outputs.exists == 'true'
       run: npm ci
       
     - name: Make gradlew executable
