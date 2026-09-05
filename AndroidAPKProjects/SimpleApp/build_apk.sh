@@ -43,6 +43,7 @@ echo "Generating R.java..."
     --dir app/src/main/res \
     -o app/build/intermediates/compiled_res.zip
 
+# Use --auto-add-overlay to allow overlays that add/override resources
 "$BUILD_TOOLS_DIR/aapt2" link \
     -o app/build/intermediates/base.apk \
     -I "$PLATFORM_DIR/android.jar" \
@@ -50,7 +51,8 @@ echo "Generating R.java..."
     -R app/build/intermediates/compiled_res.zip \
     --java app/build/intermediates/java \
     --min-sdk-version 24 \
-    --target-sdk-version 34
+    --target-sdk-version 34 \
+    --auto-add-overlay
 
 # Compile Java sources
 echo "Compiling Java sources..."
@@ -78,7 +80,8 @@ cd app/build/intermediates
     -R compiled_res.zip \
     --dex dex/classes.dex \
     --min-sdk-version 24 \
-    --target-sdk-version 34
+    --target-sdk-version 34 \
+    --auto-add-overlay
 cd ../../../
 
 # Sign APK (debug keystore)
