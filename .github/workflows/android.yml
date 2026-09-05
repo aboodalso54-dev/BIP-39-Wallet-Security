@@ -36,6 +36,16 @@ jobs:
         distribution: 'temurin'
         cache: gradle
         
+    - name: Install Gradle if wrapper missing
+      run: |
+        if [ ! -f android/gradlew ]; then
+          echo "gradlew not found — installing Gradle on runner"
+          sudo apt-get update && sudo apt-get install -y gradle
+        else
+          echo "gradlew exists — skipping Gradle install"
+        fi
+      shell: bash
+
     - name: Set up Node.js
       uses: actions/setup-node@v4
       with:
@@ -70,12 +80,21 @@ jobs:
       shell: bash
       
     - name: Make gradlew executable
-      run: chmod +x android/gradlew
+      run: |
+        if [ -f android/gradlew ]; then
+          chmod +x android/gradlew
+        fi
+      shell: bash
       
     - name: Build Debug APK
       run: |
         cd android
-        ./gradlew assembleDebug
+        if [ -f ./gradlew ]; then
+          ./gradlew assembleDebug
+        else
+          gradle assembleDebug
+        fi
+      shell: bash
         
     - name: Upload Debug APK
       uses: actions/upload-artifact@v4
@@ -88,7 +107,12 @@ jobs:
       if: github.event_name == 'push' && github.ref == 'refs/heads/main'
       run: |
         cd android
-        ./gradlew assembleRelease
+        if [ -f ./gradlew ]; then
+          ./gradlew assembleRelease
+        else
+          gradle assembleRelease
+        fi
+      shell: bash
         
     - name: Upload Release APK
       if: github.event_name == 'push' && github.ref == 'refs/heads/main'
