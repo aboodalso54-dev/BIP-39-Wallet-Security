@@ -1,0 +1,4 @@
+Triggering CI re-run after fixes.
+Timestamp: 2026-09-05T14:40:00Z
+
+This commit was created by GitHub Copilot Chat Assistant to re-run GitHub Actions after applying fixes: - build only SimpleApp in workflow - allow aapt2 --auto-add-overlay in SimpleApp build script - replace package-lock.json placeholder
