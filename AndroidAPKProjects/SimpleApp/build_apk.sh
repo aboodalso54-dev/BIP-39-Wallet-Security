@@ -56,7 +56,7 @@ echo "Generating R.java..."
 echo "Compiling Java sources..."
 mkdir -p app/build/intermediates/classes
 javac -source 1.8 -target 1.8 \
-    -bootclasspath "$JAVA_HOME/jmods/java.base.jmod" \
+    # -bootclasspath "$JAVA_HOME/jmods/java.base.jmod" \
     -classpath "$PLATFORM_DIR/android.jar" \
     -d app/build/intermediates/classes \
     app/src/main/java/com/example/simpleapp/MainActivity.java
