@@ -29,7 +29,8 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: '18'
-        cache: 'npm'
+        # Removed automatic npm cache option because it requires a lockfile to exist; handle caching manually if needed
+        # cache: 'npm'
         
     - name: Install dependencies
       run: |
