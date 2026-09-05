@@ -32,8 +32,19 @@ jobs:
         cache: 'npm'
         
     - name: Install dependencies
-      run: npm ci
-      
+      run: |
+        # Prefer yarn if yarn.lock exists, otherwise use npm lockfiles, otherwise fallback to npm install
+        if [ -f yarn.lock ]; then
+          echo "Found yarn.lock — running yarn install"
+          yarn install --frozen-lockfile || yarn install
+        elif [ -f package-lock.json ] || [ -f npm-shrinkwrap.json ]; then
+          echo "Found npm lockfile — running npm ci"
+          npm ci
+        else
+          echo "No lockfile found — running npm install"
+          npm install
+        fi
+        
     - name: Make gradlew executable
       run: chmod +x android/gradlew
       
