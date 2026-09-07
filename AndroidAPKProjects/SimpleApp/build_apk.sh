@@ -50,13 +50,13 @@ echo "Generating R.java..."
     -R app/build/intermediates/compiled_res.zip \
     --java app/build/intermediates/java \
     --min-sdk-version 24 \
-    --target-sdk-version 34
+    --target-sdk-version 34 \
+    --auto-add-overlay
 
 # Compile Java sources
 echo "Compiling Java sources..."
 mkdir -p app/build/intermediates/classes
 javac -source 1.8 -target 1.8 \
-    # -bootclasspath "$JAVA_HOME/jmods/java.base.jmod" \
     -classpath "$PLATFORM_DIR/android.jar" \
     -d app/build/intermediates/classes \
     app/src/main/java/com/example/simpleapp/MainActivity.java
@@ -78,7 +78,8 @@ cd app/build/intermediates
     -R compiled_res.zip \
     --dex dex/classes.dex \
     --min-sdk-version 24 \
-    --target-sdk-version 34
+    --target-sdk-version 34 \
+    --auto-add-overlay
 cd ../../../
 
 # Sign APK (debug keystore)
