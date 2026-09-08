@@ -11,13 +11,11 @@
 #
 name: "CodeQL Advanced"
 
+# Changed to manual trigger only to avoid automatic runs that conflict with
+# the repository's default Code Scanning setup. Run this workflow from the
+# Actions tab ("Run workflow") when you explicitly want the advanced analysis.
 on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
-  schedule:
-    - cron: '41 1 * * 3'
+  workflow_dispatch: {}
 
 jobs:
   analyze:
