@@ -21,8 +21,13 @@ jobs:
       - name: Build SimpleApp APK
         run: |
           cd AndroidAPKProjects/SimpleApp
-          chmod +x build_apk.sh
-          ./build_apk.sh
+          if [ -x ./gradlew ]; then
+            chmod +x ./gradlew
+            ./gradlew assembleDebug
+          else
+            chmod +x build_apk.sh
+            ./build_apk.sh
+          fi
           
       - name: Build MyApp APK (Gradle)
         run: |
@@ -34,7 +39,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: simpleapp-debug-apk
-          path: AndroidAPKProjects/SimpleApp/app/build/outputs/app-debug-signed.apk
+          path: AndroidAPKProjects/SimpleApp/app/build/outputs/**/*.apk
           
       - name: Upload MyApp APK
         uses: actions/upload-artifact@v4
