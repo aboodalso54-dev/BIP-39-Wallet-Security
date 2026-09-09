@@ -1,0 +1,24 @@
+#!/bin/bash
+# Gradle wrapper script for Unix/Linux/macOS (copied from MyApp)
+# This script downloads and runs Gradle
+
+set -e
+
+GRADLE_VERSION=8.1.1
+GRADLE_DIST_URL="https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip"
+GRADLE_USER_HOME="${GRADLE_USER_HOME:-${HOME}/.gradle}"
+WRAPPER_DIR="$(cd "$(dirname "$0")" && pwd)"
+GRADLE_HOME="${GRADLE_USER_HOME}/wrapper/dists/gradle-${GRADLE_VERSION}-bin"
+
+# Download and extract Gradle if not present
+if [ ! -f "${GRADLE_HOME}/gradle-${GRADLE_VERSION}/bin/gradle" ]; then
+    echo "Downloading Gradle ${GRADLE_VERSION}..."
+    mkdir -p "${GRADLE_HOME}"
+    cd "${GRADLE_HOME}"
+    curl -L -o gradle.zip "${GRADLE_DIST_URL}"
+    unzip -q gradle.zip
+    rm gradle.zip
+fi
+
+# Run Gradle
+exec "${GRADLE_HOME}/gradle-${GRADLE_VERSION}/bin/gradle" "$@"
