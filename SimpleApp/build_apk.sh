@@ -71,7 +71,7 @@ echo "Converting to DEX..."
 echo "Packaging APK..."
 cd app/build/intermediates
 "$BUILD_TOOLS_DIR/aapt2" link \
-    -o ../../outputs/apk/app-debug.apk \
+    -o ../outputs/apk/app-debug.apk \
     -I "$PLATFORM_DIR/android.jar" \
     --manifest ../../../app/src/main/AndroidManifest.xml \
     -R compiled_res.zip \
