@@ -4,7 +4,7 @@
 
 set -e
 
-WORKSPACE="/workspace/ef3666c6-a0dc-4dbb-a42b-97317fc721b3/sessions/agent_15cb467b-9d12-48d3-954f-dff0f2d58b09"
+WORKSPACE="$(pwd)"
 PROJECT_DIR="$WORKSPACE/AndroidAPKProjects/SimpleApp"
 
 echo "=== Building Android APK ==="
