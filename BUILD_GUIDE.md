@@ -8,7 +8,7 @@
 ## Option 2: Local Build (Run in Terminal)
 ```bash
 # Navigate to workspace
-cd /workspace/ef3666c6-a0dc-4dbb-a42b-97317fc721b3/sessions/agent_15cb467b-9d12-48d3-954f-dff0f2d58b09
+cd "$(pwd)"  # Your workspace path
 
 # Run complete build (installs SDK, builds both projects)
 ./build_complete.sh
