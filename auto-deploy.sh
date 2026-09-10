@@ -66,12 +66,12 @@ git remote add origin "https://github.com/$GH_USER/$REPO_NAME.git"
 git branch -M main
 
 # Try push, if repo doesn't exist yet, user needs to create it
-if ! git push -u origin main --force 2>/dev/null; then
+if ! git push -u origin main 2>/dev/null; then
     echo "❌ Push failed. Repository may not exist yet."
     echo "   Please create it at: https://github.com/new"
     echo "   Name: $REPO_NAME"
     read -p "Press Enter after creating repository, then I'll retry push..."
-    git push -u origin main --force
+    git push -u origin main
 fi
 echo "✅ Code pushed to GitHub"
 
@@ -83,9 +83,9 @@ fi
 
 # Extract keystore info
 KEYSTORE_BASE64=$(base64 -w 0 release.keystore 2>/dev/null || base64 release.keystore)
-KEYSTORE_PASSWORD="android"
-KEY_ALIAS="my-key-alias"
-KEY_PASSWORD="android"
+KEYSTORE_PASSWORD="${KEYSTORE_PASSWORD:-android}"
+KEY_ALIAS="${KEY_ALIAS:-my-key-alias}"
+KEY_PASSWORD="${KEY_PASSWORD:-android}"
 
 # Add repository secrets (requires admin access)
 echo "🔑 Adding repository secrets"

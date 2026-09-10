@@ -5,6 +5,8 @@
 echo "🔐 Generating release keystore for Android app signing..."
 
 # Generate keystore
+KEYSTORE_PASSWORD="${KEYSTORE_PASSWORD:-android}"
+KEY_PASSWORD="${KEY_PASSWORD:-android}"
 keytool -genkeypair \
   -v \
   -keystore release.keystore \
@@ -12,8 +14,8 @@ keytool -genkeypair \
   -keyalg RSA \
   -keysize 2048 \
   -validity 10000 \
-  -storepass android \
-  -keypass android \
+  -storepass "$KEYSTORE_PASSWORD" \
+  -keypass "$KEY_PASSWORD" \
   -dname "CN=MyApp, OU=Development, O=MyCompany, L=City, ST=State, C=US"
 
 echo "✅ Keystore generated: release.keystore"
