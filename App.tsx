@@ -1,4 +1,5 @@
 import React from 'react';
+// SafeAreaView is deprecated in newer RN versions; consider migrating to react-native-safe-area-context
 import { SafeAreaView, Text } from 'react-native';
 
 const MyApp = () => {
