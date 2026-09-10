@@ -80,8 +80,8 @@ class MainActivity : AppCompatActivity() {
         statusText.text = sb.toString()
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    override fun onRequestPermissionsResult(requestCode: Int, requestedPermissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, requestedPermissions, grantResults)
         if (requestCode == PERMISSION_REQUEST_CODE) {
             val grantedCount = grantResults.count { it == PackageManager.PERMISSION_GRANTED }
             val deniedCount = grantResults.count { it == PackageManager.PERMISSION_DENIED }
