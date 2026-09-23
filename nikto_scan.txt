@@ -1,0 +1,19 @@
+- Nikto v2.1.5
+---------------------------------------------------------------------------
++ Target IP:          78.141.224.28
++ Target Hostname:    kuraimibank.com
++ Target Port:        443
++ Start Time:         2026-09-23 15:19:21 (GMT0)
+---------------------------------------------------------------------------
++ Server: cloudflare
++ Uncommon header 'strict-transport-security' found, with contents: max-age=31536000; includeSubDomains
++ Uncommon header 'x-content-type-options' found, with contents: nosniff
++ Uncommon header 'permissions-policy' found, with contents: camera=(), microphone=(), geolocation=(), fullscreen=(self)
++ Uncommon header 'cf-cache-status' found, with contents: DYNAMIC
++ Uncommon header 'x-frame-options' found, with contents: SAMEORIGIN
++ Uncommon header 'referrer-policy' found, with contents: no-referrer
++ Uncommon header 'x-xss-protection' found, with contents: 1; mode=block
++ Uncommon header 'cf-ray' found, with contents: a3fa86f90d94f0aa-DFW
++ No CGI Directories found (use '-C all' to force check all possible dirs)
++ Allowed HTTP Methods: GET, HEAD 
++ DEBUG HTTP verb may show server debugging information. See http://msdn.microsoft.com/en-us/library/e8z01xdh%28VS.80%29.aspx for details.
