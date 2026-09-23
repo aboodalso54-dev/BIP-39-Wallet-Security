@@ -1,0 +1,204 @@
+- Nikto v2.1.5
+---------------------------------------------------------------------------
+V:Wed Sep 23 15:36:48 2026 - Initialising plugin nikto_report_html
+V:Wed Sep 23 15:36:48 2026 - Loaded "Report as HTML" plugin.
+V:Wed Sep 23 15:36:48 2026 - Initialising plugin nikto_outdated
+V:Wed Sep 23 15:36:48 2026 - Loaded "Outdated" plugin.
+V:Wed Sep 23 15:36:48 2026 - Initialising plugin nikto_msgs
+V:Wed Sep 23 15:36:48 2026 - Loaded "Server Messages" plugin.
+V:Wed Sep 23 15:36:48 2026 - Initialising plugin nikto_report_csv
+V:Wed Sep 23 15:36:48 2026 - Loaded "CSV reports" plugin.
+V:Wed Sep 23 15:36:48 2026 - Initialising plugin nikto_auth
+V:Wed Sep 23 15:36:48 2026 - Loaded "Guess authentication" plugin.
+V:Wed Sep 23 15:36:48 2026 - Initialising plugin nikto_core
+V:Wed Sep 23 15:36:48 2026 - Initialising plugin nikto_paths
+V:Wed Sep 23 15:36:48 2026 - Loaded "Path Search" plugin.
+V:Wed Sep 23 15:36:48 2026 - Initialising plugin nikto_favicon
+V:Wed Sep 23 15:36:48 2026 - Loaded "Favicon" plugin.
+V:Wed Sep 23 15:36:48 2026 - Initialising plugin nikto_headers
+V:Wed Sep 23 15:36:48 2026 - Loaded "HTTP Headers" plugin.
+V:Wed Sep 23 15:36:48 2026 - Initialising plugin nikto_fileops
+V:Wed Sep 23 15:36:48 2026 - Loaded "File Operations" plugin.
+V:Wed Sep 23 15:36:48 2026 - Initialising plugin nikto_tests
+V:Wed Sep 23 15:36:48 2026 - Loaded "Nikto Tests" plugin.
+V:Wed Sep 23 15:36:48 2026 - Initialising plugin nikto_report_msf
+V:Wed Sep 23 15:36:48 2026 - Loaded "Report data to Metasploit" plugin.
+V:Wed Sep 23 15:36:48 2026 - Initialising plugin nikto_apache_expect_xss
+V:Wed Sep 23 15:36:48 2026 - Loaded "Apache Expect XSS" plugin.
+V:Wed Sep 23 15:36:48 2026 - Initialising plugin nikto_siebel
+V:Wed Sep 23 15:36:48 2026 - Loaded "Siebel Checks" plugin.
+V:Wed Sep 23 15:36:48 2026 - Initialising plugin nikto_content_search
+V:Wed Sep 23 15:36:48 2026 - Loaded "Content Search" plugin.
+V:Wed Sep 23 15:36:48 2026 - Initialising plugin nikto_embedded
+V:Wed Sep 23 15:36:48 2026 - Loaded "Embedded Detection" plugin.
+V:Wed Sep 23 15:36:48 2026 - Initialising plugin nikto_dictionary_attack
+V:Wed Sep 23 15:36:48 2026 - Loaded "Dictionary attack" plugin.
+V:Wed Sep 23 15:36:48 2026 - Initialising plugin nikto_parked
+V:Wed Sep 23 15:36:48 2026 - Loaded "Parked Detection" plugin.
+V:Wed Sep 23 15:36:48 2026 - Initialising plugin nikto_subdomain
+V:Wed Sep 23 15:36:48 2026 - Loaded "Sub-domain forcer" plugin.
+V:Wed Sep 23 15:36:48 2026 - Initialising plugin nikto_cookies
+V:Wed Sep 23 15:36:48 2026 - Loaded "HTTP Cookie Internal IP" plugin.
+V:Wed Sep 23 15:36:48 2026 - Initialising plugin nikto_apacheusers
+V:Wed Sep 23 15:36:48 2026 - Loaded "Apache Users" plugin.
+V:Wed Sep 23 15:36:48 2026 - Initialising plugin nikto_report_xml
+V:Wed Sep 23 15:36:48 2026 - Loaded "Report as XML" plugin.
+V:Wed Sep 23 15:36:48 2026 - Initialising plugin nikto_clientaccesspolicy
+V:Wed Sep 23 15:36:48 2026 - Loaded "clientaccesspolicy.xml" plugin.
+V:Wed Sep 23 15:36:48 2026 - Initialising plugin nikto_multiple_index
+V:Wed Sep 23 15:36:48 2026 - Loaded "Multiple Index" plugin.
+V:Wed Sep 23 15:36:48 2026 - Initialising plugin nikto_httpoptions
+V:Wed Sep 23 15:36:48 2026 - Loaded "HTTP Options" plugin.
+V:Wed Sep 23 15:36:48 2026 - Initialising plugin nikto_robots
+V:Wed Sep 23 15:36:48 2026 - Loaded "Robots" plugin.
+V:Wed Sep 23 15:36:48 2026 - Initialising plugin nikto_ssl
+V:Wed Sep 23 15:36:48 2026 - Loaded "SSL and cert checks" plugin.
+V:Wed Sep 23 15:36:48 2026 - Initialising plugin nikto_report_nbe
+V:Wed Sep 23 15:36:48 2026 - Loaded "NBE reports" plugin.
+V:Wed Sep 23 15:36:48 2026 - Initialising plugin nikto_cgi
+V:Wed Sep 23 15:36:48 2026 - Loaded "CGI" plugin.
+V:Wed Sep 23 15:36:48 2026 - Initialising plugin nikto_put_del_test
+V:Wed Sep 23 15:36:48 2026 - Loaded "Put/Delete test" plugin.
+V:Wed Sep 23 15:36:48 2026 - Initialising plugin nikto_report_text
+V:Wed Sep 23 15:36:48 2026 - Loaded "Text reports" plugin.
+V:Wed Sep 23 15:36:48 2026 - Getting targets
+V:Wed Sep 23 15:36:48 2026 - Added -root value of '/ar' from URI
+V:Wed Sep 23 15:36:48 2026 - Checking for HTTP on port kuraimibank.com:443, using HEAD
+V:Wed Sep 23 15:36:50 2026 - 302 for HEAD:	/
+V:Wed Sep 23 15:36:50 2026 - Opening reports (none, )
+V:Wed Sep 23 15:36:50 2026 - 0 server checks loaded
+V:Wed Sep 23 15:36:50 2026 - Running start for "Favicon" plugin
+V:Wed Sep 23 15:36:50 2026 - Running start for "HTTP Headers" plugin
+V:Wed Sep 23 15:36:50 2026 - Running start for "Embedded Detection" plugin
+V:Wed Sep 23 15:36:50 2026 - Running start for "Guess authentication" plugin
+V:Wed Sep 23 15:36:50 2026 - Running start for "Content Search" plugin
+V:Wed Sep 23 15:36:51 2026 - 200 for GET:	/ar/
++ Target IP:          78.141.224.28
++ Target Hostname:    kuraimibank.com
++ Target Port:        443
++ Start Time:         2026-09-23 15:36:50 (GMT0)
+---------------------------------------------------------------------------
++ Server: cloudflare
+V:Wed Sep 23 15:36:52 2026 - 200 for GET:	/ar/
++ Uncommon header 'cf-ray' found, with contents: a3faa09cbf40f0aa-DFW
++ Uncommon header 'x-frame-options' found, with contents: SAMEORIGIN
++ Uncommon header 'x-xss-protection' found, with contents: 1; mode=block
++ Uncommon header 'cf-cache-status' found, with contents: DYNAMIC
++ Uncommon header 'strict-transport-security' found, with contents: max-age=31536000; includeSubDomains
++ Uncommon header 'permissions-policy' found, with contents: camera=(), microphone=(), geolocation=(), fullscreen=(self)
++ Uncommon header 'x-content-type-options' found, with contents: nosniff
++ Uncommon header 'referrer-policy' found, with contents: no-referrer
+V:Wed Sep 23 15:36:52 2026 - Testing error for file: /ar/otSZgkRz/
+V:Wed Sep 23 15:36:52 2026 - 404 for GET:	/ar/otSZgkRz/
+V:Wed Sep 23 15:36:52 2026 - Testing error for file: /ar/.otSZgkRz
+V:Wed Sep 23 15:36:52 2026 - 403 for GET:	/ar/.otSZgkRz
+V:Wed Sep 23 15:36:52 2026 - Testing error for file: /ar/otSZgkRz
+V:Wed Sep 23 15:36:52 2026 - 404 for GET:	/ar/otSZgkRz
+V:Wed Sep 23 15:36:52 2026 - 404 for GET:	/ar/index.php?
+V:Wed Sep 23 15:36:52 2026 - Running recon for "CGI" plugin
+V:Wed Sep 23 15:36:52 2026 - 404 for GET:	/ar/cgi.cgi/
+V:Wed Sep 23 15:36:53 2026 - 404 for GET:	/ar/webcgi/
+V:Wed Sep 23 15:36:53 2026 - 404 for GET:	/ar/cgi-914/
+V:Wed Sep 23 15:36:54 2026 - 404 for GET:	/ar/cgi-915/
+V:Wed Sep 23 15:36:55 2026 - 404 for GET:	/ar/bin/
+V:Wed Sep 23 15:36:55 2026 - 404 for GET:	/ar/cgi/
+V:Wed Sep 23 15:36:55 2026 - 404 for GET:	/ar/mpcgi/
+V:Wed Sep 23 15:36:55 2026 - 404 for GET:	/ar/cgi-bin/
+V:Wed Sep 23 15:36:55 2026 - 404 for GET:	/ar/ows-bin/
+V:Wed Sep 23 15:36:56 2026 - 404 for GET:	/ar/cgi-sys/
+V:Wed Sep 23 15:36:56 2026 - 404 for GET:	/ar/cgi-local/
+V:Wed Sep 23 15:36:57 2026 - 404 for GET:	/ar/htbin/
+V:Wed Sep 23 15:36:57 2026 - 404 for GET:	/ar/cgibin/
+V:Wed Sep 23 15:36:58 2026 - 404 for GET:	/ar/cgis/
+V:Wed Sep 23 15:36:58 2026 - 404 for GET:	/ar/scripts/
+V:Wed Sep 23 15:36:58 2026 - 404 for GET:	/ar/cgi-win/
+V:Wed Sep 23 15:36:58 2026 - 404 for GET:	/ar/fcgi-bin/
+V:Wed Sep 23 15:36:59 2026 - 404 for GET:	/ar/cgi-exe/
+V:Wed Sep 23 15:36:59 2026 - 404 for GET:	/ar/cgi-home/
+V:Wed Sep 23 15:37:00 2026 - 404 for GET:	/ar/cgi-perl/
+V:Wed Sep 23 15:37:00 2026 - 404 for GET:	/ar/scgi-bin/
++ No CGI Directories found (use '-C all' to force check all possible dirs)
+V:Wed Sep 23 15:37:00 2026 - Checking for CGI in: 
+V:Wed Sep 23 15:37:00 2026 - Running recon for "Path Search" plugin
+V:Wed Sep 23 15:37:00 2026 - 200 for GET:	/ar/
+V:Wed Sep 23 15:37:00 2026 - Running recon for "clientaccesspolicy.xml" plugin
+V:Wed Sep 23 15:37:01 2026 - 404 for GET:	/ar/clientaccesspolicy.xml
+V:Wed Sep 23 15:37:01 2026 - 404 for GET:	/ar/crossdomain.xml
+V:Wed Sep 23 15:37:01 2026 - Running recon for "Robots" plugin
+V:Wed Sep 23 15:37:04 2026 - 404 for GET:	/ar/robots.txt
+V:Wed Sep 23 15:37:04 2026 - Running scan for "Outdated" plugin
+V:Wed Sep 23 15:37:04 2026 - Running scan for "Favicon" plugin
+V:Wed Sep 23 15:37:04 2026 - 404 for GET:	/ar/favicon.ico
+V:Wed Sep 23 15:37:04 2026 - 200 for GET:	/ar/
+V:Wed Sep 23 15:37:04 2026 - Running scan for "HTTP Headers" plugin
+V:Wed Sep 23 15:37:04 2026 - 404 for GET:	/ar/index.asp
+V:Wed Sep 23 15:37:05 2026 - 404 for GET:	/ar/junk999.asp
+V:Wed Sep 23 15:37:05 2026 - 404 for GET:	/ar/index.aspx
+V:Wed Sep 23 15:37:05 2026 - 404 for GET:	/ar/junk988.aspx
+V:Wed Sep 23 15:37:05 2026 - 404 for GET:	/ar/login.asp
+V:Wed Sep 23 15:37:05 2026 - 404 for GET:	/ar/login.aspx
+V:Wed Sep 23 15:37:05 2026 - 403 for GET:	/ar/
+V:Wed Sep 23 15:37:05 2026 - 403 for GET:	/ar/images
+V:Wed Sep 23 15:37:05 2026 - 403 for GET:	/ar.
+V:Wed Sep 23 15:37:05 2026 - Running scan for "Apache Expect XSS" plugin
+V:Wed Sep 23 15:37:05 2026 - 200 for GET:	/ar/
+V:Wed Sep 23 15:37:05 2026 - Running scan for "Siebel Checks" plugin
+V:Wed Sep 23 15:37:05 2026 No Siebel Application defined
+V:Wed Sep 23 15:37:05 2026 - Running scan for "Embedded Detection" plugin
+V:Wed Sep 23 15:37:06 2026 - 200 for GET:	/ar/
+V:Wed Sep 23 15:37:06 2026 - 200 for GET:	/ar/
+V:Wed Sep 23 15:37:06 2026 - 200 for GET:	/ar/
+V:Wed Sep 23 15:37:06 2026 - 200 for GET:	/ar/
+V:Wed Sep 23 15:37:06 2026 - 404 for GET:	/ar/hp/device/this.LCDispatcher
+V:Wed Sep 23 15:37:06 2026 - 404 for GET:	/ar/hp/device/this.LCDispatcher
+V:Wed Sep 23 15:37:07 2026 - 404 for GET:	/ar/hp/device/this.LCDispatcher
+V:Wed Sep 23 15:37:07 2026 - 404 for GET:	/ar/hp/device/this.LCDispatcher
+V:Wed Sep 23 15:37:07 2026 - 404 for GET:	/ar/hmstat.htm
+V:Wed Sep 23 15:37:07 2026 - 404 for GET:	/ar/SoundBridgeStatus.html
+V:Wed Sep 23 15:37:08 2026 - 404 for GET:	/ar/eng/start/StatPtrGen.htm
+V:Wed Sep 23 15:37:08 2026 - 404 for GET:	/ar/cab/top.shtml
+V:Wed Sep 23 15:37:08 2026 - 404 for GET:	/ar/home.asp
+V:Wed Sep 23 15:37:08 2026 - 200 for GET:	/ar/
+V:Wed Sep 23 15:37:09 2026 - 200 for GET:	/ar/
+V:Wed Sep 23 15:37:09 2026 - 200 for GET:	/ar/
+V:Wed Sep 23 15:37:09 2026 - Running scan for "Parked Detection" plugin
+V:Wed Sep 23 15:37:09 2026 - 200 for GET:	/ar
+V:Wed Sep 23 15:37:09 2026 - Running scan for "Apache Users" plugin
+V:Wed Sep 23 15:37:09 2026 - 404 for GET:	/ar/~root
+V:Wed Sep 23 15:37:09 2026 - Running scan for "Multiple Index" plugin
+V:Wed Sep 23 15:37:09 2026 - 404 for GET:	/ar/index.php
+V:Wed Sep 23 15:37:10 2026 - 404 for GET:	/ar/index.php3
+V:Wed Sep 23 15:37:10 2026 - 404 for GET:	/ar/index.html
+V:Wed Sep 23 15:37:10 2026 - 404 for GET:	/ar/index.htm
+V:Wed Sep 23 15:37:10 2026 - 404 for GET:	/ar/index.shtml
+V:Wed Sep 23 15:37:10 2026 - 404 for GET:	/ar/index.cfm
+V:Wed Sep 23 15:37:10 2026 - 404 for GET:	/ar/index.cgi
+V:Wed Sep 23 15:37:10 2026 - 404 for GET:	/ar/index.pl
+V:Wed Sep 23 15:37:11 2026 - 404 for GET:	/ar/index.asp
+V:Wed Sep 23 15:37:11 2026 - 404 for GET:	/ar/index.aspx
+V:Wed Sep 23 15:37:11 2026 - 404 for GET:	/ar/default.asp
+V:Wed Sep 23 15:37:11 2026 - 404 for GET:	/ar/default.aspx
+V:Wed Sep 23 15:37:11 2026 - 404 for GET:	/ar/default.htm
+V:Wed Sep 23 15:37:12 2026 - 404 for GET:	/ar/index.do
+V:Wed Sep 23 15:37:12 2026 - 404 for GET:	/ar/index.jhtml
+V:Wed Sep 23 15:37:12 2026 - Running scan for "SSL and cert checks" plugin
+V:Wed Sep 23 15:37:12 2026 - Running scan for "Put/Delete test" plugin
+V:Wed Sep 23 15:37:12 2026 - 404 for PUT:	/ar/nikto-test-TevJ7oRY.html
+V:Wed Sep 23 15:37:12 2026 - Running scan for "Server Messages" plugin
+V:Wed Sep 23 15:37:12 2026 - Running scan for "HTTP Options" plugin
+V:Wed Sep 23 15:37:12 2026 - 404 for OPTIONS:	/ar*
+V:Wed Sep 23 15:37:12 2026 - 200 for OPTIONS:	/ar/
++ Allowed HTTP Methods: GET, HEAD 
+V:Wed Sep 23 15:37:13 2026 - 200 for DEBUG:	/ar/
++ DEBUG HTTP verb may show server debugging information. See http://msdn.microsoft.com/en-us/library/e8z01xdh%28VS.80%29.aspx for details.
+V:Wed Sep 23 15:37:13 2026 - 403 for PROPFIND:	/ar/
+V:Wed Sep 23 15:37:13 2026 - 405 for TRACE:	/ar/
+V:Wed Sep 23 15:37:13 2026 - 405 for TRACE:	/ar/
+V:Wed Sep 23 15:37:13 2026 - 403 for TRACK:	/ar/
+V:Wed Sep 23 15:37:13 2026 - 403 for TRACK:	/ar/
+V:Wed Sep 23 15:37:13 2026 - Running scan for "Nikto Tests" plugin
++ 0 items checked: 0 error(s) and 10 item(s) reported on remote host
++ End Time:           2026-09-23 15:37:13 (GMT0) (23 seconds)
+---------------------------------------------------------------------------
++ 1 host(s) tested
+V:Wed Sep 23 15:37:13 2026 + 86 requests made in 25 seconds
