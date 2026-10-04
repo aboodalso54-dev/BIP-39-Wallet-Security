@@ -84,9 +84,9 @@ jobs:
 
           # 2) Keystore kept as a draft-release asset (stable across runs)
           ASSET_ID=$(gh api "repos/$REPO/releases" --paginate \
-            --jq "[.[] | select(.tag_name == \"$KEY_TAG\") | .assets[] | select(.name == \"keystore.b64\") | .id][0] // empty")
+            --jq "[.[] | select(.tag_name == \"$KEY_TAG\") | .assets[] | select(.name == \"keystore.b64\") | .id][0] // empty" 2>/dev/null || true)
           if [ -n "$ASSET_ID" ]; then
-            gh api "repos/$REPO/releases/assets/$ASSET_ID" -H "Accept: application/octet-stream" > "$RUNNER_TEMP/keystore/keystore.b64"
+            gh api "repos/$REPO/releases/assets/$ASSET_ID" -H "Accept: application/octet-stream" > "$RUNNER_TEMP/keystore/keystore.b64" 2>/dev/null || true
             tr -d '\n\r ' < "$RUNNER_TEMP/keystore/keystore.b64" | base64 -di > "$KS" 2>/dev/null || true
             if valid "$KS"; then
               echo "Using keystore stored in draft release '$KEY_TAG'"
