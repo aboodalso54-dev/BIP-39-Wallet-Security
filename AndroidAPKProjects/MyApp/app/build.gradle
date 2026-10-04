@@ -17,10 +17,23 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        release {
+            def store = System.getenv('MYAPP_UPLOAD_STORE_FILE')
+            if (store) {
+                storeFile file(store)
+                storePassword System.getenv('MYAPP_UPLOAD_STORE_PASSWORD')
+                keyAlias System.getenv('MYAPP_UPLOAD_KEY_ALIAS')
+                keyPassword System.getenv('MYAPP_UPLOAD_KEY_PASSWORD')
+            }
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig System.getenv('MYAPP_UPLOAD_STORE_FILE') ? signingConfigs.release : signingConfigs.debug
         }
     }
     

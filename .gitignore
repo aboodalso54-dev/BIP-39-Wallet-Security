@@ -1,0 +1,9 @@
+
+# Secrets / signing
+*.keystore
+*.jks
+keystore-info.txt
+
+# Build output
+**/build/
+.gradle/
