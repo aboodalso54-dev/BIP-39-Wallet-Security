@@ -53,7 +53,7 @@ jobs:
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         run: |
-          set -ex
+          set -e
           KS="$RUNNER_TEMP/keystore/release.keystore"
           mkdir -p "$(dirname "$KS")"
           PASS="${KEYSTORE_PASSWORD:-android}"
@@ -96,6 +96,7 @@ jobs:
           fi
 
           # 3) First run: create the key once and persist it
+          rm -f "$KS"
           keytool -genkeypair -v -keystore "$KS" -alias "$ALIAS" -keyalg RSA -keysize 2048 \
             -validity 10000 -storepass "$PASS" -keypass "$KPASS" \
             -dname "CN=MyApp, OU=Release, O=MyApp, L=City, ST=State, C=US" > /dev/null 2>&1
