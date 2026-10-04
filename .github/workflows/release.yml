@@ -37,17 +37,20 @@ jobs:
           echo "ANDROID_SDK_ROOT=${ANDROID_SDK_ROOT:-$ANDROID_HOME}" >> "$GITHUB_ENV"
 
       - name: Restore signing keystore
-        if: ${{ secrets.KEYSTORE_BASE64 != '' }}
+        if: env.KEYSTORE_BASE64 != ''
         env:
           KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         run: |
           mkdir -p "$RUNNER_TEMP/keystore"
           printf '%s' "$KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/keystore/release.keystore"
           {
             echo "MYAPP_UPLOAD_STORE_FILE=$RUNNER_TEMP/keystore/release.keystore"
-            echo "MYAPP_UPLOAD_STORE_PASSWORD=${{ secrets.KEYSTORE_PASSWORD }}"
-            echo "MYAPP_UPLOAD_KEY_ALIAS=${{ secrets.KEY_ALIAS }}"
-            echo "MYAPP_UPLOAD_KEY_PASSWORD=${{ secrets.KEY_PASSWORD }}"
+            echo "MYAPP_UPLOAD_STORE_PASSWORD=$KEYSTORE_PASSWORD"
+            echo "MYAPP_UPLOAD_KEY_ALIAS=$KEY_ALIAS"
+            echo "MYAPP_UPLOAD_KEY_PASSWORD=$KEY_PASSWORD"
           } >> "$GITHUB_ENV"
 
       - name: Build release APKs
@@ -74,6 +77,6 @@ jobs:
           files: AndroidAPKProjects/MyApp/app/build/outputs/apk/release/*.apk
           generate_release_notes: true
           tag_name: ${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || format('v{0}', github.run_number) }}
-          release_name: ${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || format('v{0}', github.run_number) }}
+          name: ${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || format('v{0}', github.run_number) }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
