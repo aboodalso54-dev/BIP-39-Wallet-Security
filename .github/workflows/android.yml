@@ -36,31 +36,33 @@ jobs:
       - name: Build APKs (Gradle)
         run: |
           set -e
-          for app in AndroidAPKProjects/MyApp AndroidAPKProjects/SimpleApp; do
+          FAILED=""
+          for app in AndroidAPKProjects/MyApp AndroidAPKProjects/SimpleApp MyApp; do
+            [ -f "$app/settings.gradle" ] || continue
             echo "::group::$app"
-            cd "$app"
-            chmod +x ./gradlew || true
-            if [ ! -s gradle/wrapper/gradle-wrapper.jar ]; then
-              echo "Wrapper jar missing — regenerating wrapper"
-              gradle wrapper --gradle-version 8.4
-            fi
-            ./gradlew --no-daemon assembleDebug
-            cd - > /dev/null
+            (
+              cd "$app"
+              chmod +x ./gradlew || true
+              if [ ! -s gradle/wrapper/gradle-wrapper.jar ]; then
+                echo "Wrapper jar missing — regenerating wrapper"
+                gradle wrapper --gradle-version 8.4
+              fi
+              ./gradlew --no-daemon assembleDebug
+            ) || FAILED="$FAILED $app"
             echo "::endgroup::"
           done
+          if [ -n "$FAILED" ]; then
+            echo "::error::Failed to build:$FAILED"
+            exit 1
+          fi
 
-      - name: Upload MyApp debug APK
+      - name: Upload debug APKs
         uses: actions/upload-artifact@v4
         with:
-          name: myapp-debug-apk
-          path: AndroidAPKProjects/MyApp/app/build/outputs/apk/debug/*.apk
-          if-no-files-found: warn
-          retention-days: 14
-
-      - name: Upload SimpleApp debug APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: simpleapp-debug-apk
-          path: AndroidAPKProjects/SimpleApp/app/build/outputs/apk/debug/*.apk
+          name: debug-apks
+          path: |
+            AndroidAPKProjects/MyApp/app/build/outputs/apk/debug/*.apk
+            AndroidAPKProjects/SimpleApp/app/build/outputs/apk/debug/*.apk
+            MyApp/app/build/outputs/apk/debug/*.apk
           if-no-files-found: warn
           retention-days: 14

@@ -1,93 +1,63 @@
-# MyApp - React Native Android App
+# BIP-39 Wallet Security & Entropy Simulator
 
-This is a React Native application configured with GitHub Actions for automatic APK building.
+مستودع يحتوي على مشاريع Android مع **بناء APK تلقائي بالكامل عبر GitHub Actions** —
+كل `push` يُنتج debug APK، وكل `tag` يُنتج **إصدارًا موقّعًا** (APK + AAB).
 
-## GitHub Actions Workflows
+## التحميل المباشر
 
-This project includes two GitHub Actions workflows:
+| الإصدار | الملف | الرابط |
+|---|---|---|
+| v1.2.4 (موقّع) | APK | https://github.com/aboodalso54-dev/BIP-39-Wallet-Security/releases/download/v1.2.4/app-release.apk |
+| v1.2.4 (موقّع) | AAB (Play Store) | https://github.com/aboodalso54-dev/BIP-39-Wallet-Security/releases/download/v1.2.4/app-release.aab |
+| أحدث إصدار | — | https://github.com/aboodalso54-dev/BIP-39-Wallet-Security/releases/latest |
 
-1. **Android CI** (`.github/workflows/android.yml`) - Runs on every push and pull request
-   - Builds debug APK for testing
-   - Builds release APK for main branch pushes
-   - Uploads artifacts for download
+## كيف يعمل البناء التلقائي
 
-2. **Android Release Build** (`.github/workflows/release.yml`) - Runs on version tags (v*)
-   - Builds signed release APK
-   - Creates GitHub Release with APK attached
-   - Can be triggered manually with version input
+### 1) `Android CI` — `.github/workflows/android.yml`
+- **المُشغِّل:** كل push أو PR على `main` / `develop` (+ تشغيل يدوي)
+- **ي��مل:** JDK 17 + Android SDK 34 + Gradle (مع cache)
+- **يبني:** `AndroidAPKProjects/MyApp`، `AndroidAPKProjects/SimpleApp`، `MyApp`
+- **المخرجات:** artifact واحد `debug-apks` (كل ملفات debug APK)
+- رابط постоянный للأحدث: صفحة Actions → آخر run → Artifacts → `debug-apks`
 
-## Required Repository Secrets
+### 2) `Android Release Build` — `.github/workflows/release.yml`
+- **المُشغِّل:** `git push origin v*` أو تشغيل يدوي
+- **الإصدار (versioning):** من الـ tag — `v1.2.3` ⟵ `versionName=1.2.3`, `versionCode=10203`
+- **التوقيع:** مفتاح إصدار دائم (تفاصيله أدناه) — يتحقق بـ `apksigner` ويُفشل البناء إذا كان APK موقّعًا بمفتاح debug
+- **المخرجات:** `app-release.apk` + `app-release.aab` داخل GitHub Release + artifacts
 
-For the release workflow to work properly, you need to configure the following secrets in your GitHub repository settings:
+## مفتاح التوقيع
 
-### For Signed Releases:
-1. Go to your repository on GitHub
-2. Navigate to Settings > Secrets and variables > Actions
-3. Add the following repository secrets:
+| البند | القيمة |
+|---|---|
+| alias | `my-key-alias` |
+| store/key password | `android` |
+| SHA-256 | `00:FF:CB:21:7F:7C:75:62:1B:C1:F9:FA:16:7D:FD:15:FB:54:DD:8A:69:8D:D9:4F:F8:A2:7A:83:B2:77:85:E6` |
 
-| Secret Name | Description |
-|-------------|-------------|
-| `KEYSTORE_BASE64` | Base64 encoded keystore file (generate with `base64 -w 0 release.keystore`) |
-| `KEYSTORE_PASSWORD` | Keystore password |
-| `KEY_ALIAS` | Key alias |
-| `KEY_PASSWORD` | Key password |
+يدير الـ workflow المفتاح بنفسه بالترتيب التالي:
+1. سرّ المستودع `KEYSTORE_BASE64` إن كان صالحًا (يُفضَّل).
+2. **مسودة release داخلية باسم `signing-key`** تحمل `keystore.b64` — لا تُنشر، غير مرئية للعامة.
+3. عند أول تشغيل: يولّد المفتاح مرة واحدة ويحفظه في (2) لإعادة استخدامه.
 
-### Generating a Keystore:
+⚠️ **لا تحذف المسودة `signing-key`** — بدونها يتغير المفتاح ولا يمكن تحديث أي إصدار مُثبَّت.
+
+## إصدار جديد
+
 ```bash
-keytool -genkeypair -v -keystore release.keystore -alias my-key-alias -keyalg RSA -keysize 2048 -validity 10000
+git tag -f v1.3.0 -m v1.3.0
+git push --force origin v1.3.0
+```
+يُنشر تلقائيًا APK + AAB مع ملاحظات الإصدار.
+
+## بناء محلي
+
+```bash
+cd AndroidAPKProjects/MyApp
+./gradlew assembleDebug        # debug
+./gradlew assembleRelease      # release (يتوقّع متغيرات MYAPP_UPLOAD_* للتوقيع)
 ```
 
-Then encode it:
-```bash
-base64 -w 0 release.keystore
-```
+## الحفاظ على التحديثات
 
-## Repository Permissions
-
-The workflows require the following permissions which are set in the workflow files:
-
-- `contents: read` - For checking out code
-- `contents: write` - For creating releases (release workflow only)
-- `packages: write` - For uploading artifacts
-- `id-token: write` - For OIDC tokens if needed
-
-These permissions are configured in each workflow file under the `permissions` key.
-
-## Building Locally
-
-### Prerequisites:
-- Node.js 18+
-- JDK 17+
-- Android Studio with SDK 34
-
-### Steps:
-```bash
-# Install dependencies
-npm install
-
-# Build debug APK
-cd android && ./gradlew assembleDebug
-
-# Build release APK (requires keystore configuration)
-cd android && ./gradlew assembleRelease
-```
-
-## APK Locations
-
-- Debug APK: `android/app/build/outputs/apk/debug/app-debug.apk`
-- Release APK: `android/app/build/outputs/apk/release/app-release.apk`
-
-## Triggering Releases
-
-### Automatic (on tag push):
-```bash
-git tag v1.0.0
-git push origin v1.0.0
-```
-
-### Manual (via GitHub UI):
-1. Go to Actions tab
-2. Select "Android Release Build" workflow
-3. Click "Run workflow"
-4. Enter version tag (e.g., v1.0.0)
-5. Click "Run workflow"
+- `.github/dependabot.yml` يفتح PRs أسبوعية لتحديث Actions وGradle dependencies.
+- راجع سجل البناء بعد كل تحديث قبل النشر.
