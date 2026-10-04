@@ -53,7 +53,7 @@ jobs:
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         run: |
-          set -e
+          set -ex
           KS="$RUNNER_TEMP/keystore/release.keystore"
           mkdir -p "$(dirname "$KS")"
           PASS="${KEYSTORE_PASSWORD:-android}"
