@@ -19,6 +19,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var mnemonicInput: EditText
     private lateinit var passphraseInput: EditText
     private var entropyBits = 128
+    private var currentMnemonic: List<String> = emptyList()
+    private var addressIndex = 0
+    private var chainType = 0 // 0 = Ethereum (m/44'/60'), 1 = Bitcoin (m/44'/0')
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -107,6 +110,28 @@ class MainActivity : AppCompatActivity() {
             setOnClickListener { validateAndDerive() }
         })
 
+        root.addView(label("\nاشتقاق عناوين (BIP-32 / BIP-44)", 15f, bold = true))
+        val chainRow = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
+        listOf("Ethereum m/44'/60'", "Bitcoin m/44'/0'").forEachIndexed { index, name ->
+            chainRow.addView(Button(this).apply {
+                text = name
+                textSize = 11f
+                isAllCaps = false
+                setOnClickListener {
+                    chainType = index
+                    derive()
+                }
+            }, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
+        }
+        root.addView(chainRow)
+        root.addView(Button(this).apply {
+            text = "استخراج العنوان التالي"
+            setOnClickListener {
+                addressIndex++
+                derive()
+            }
+        })
+
         val scroll = ScrollView(this)
         scroll.addView(root)
         return scroll
@@ -116,6 +141,7 @@ class MainActivity : AppCompatActivity() {
         val passphrase = passphraseInput.text.toString()
         thread(name = "bip39-generate") {
             val result = Bip39.generate(entropyBits, passphrase)
+            currentMnemonic = result.words
             val wordsPerLine = 4
             val grouped = result.words.chunked(wordsPerLine).joinToString("\n") { it.joinToString("  ") }
             val text = buildString {
@@ -137,10 +163,42 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun derive() {
+        val words = currentMnemonic
+        if (words.isEmpty()) {
+            output.text = "ولّد mnemonic أولًا"
+            return
+        }
+        val passphrase = passphraseInput.text.toString()
+        val coin = if (chainType == 0) "Ethereum" else "Bitcoin"
+        thread(name = "bip32-derive") {
+            val seed = Bip39.toSeed(words, passphrase)
+            val account = if (chainType == 0) {
+                Bip32.ethAccount(seed, addressIndex = addressIndex)
+            } else {
+                Bip32.btcAccount(seed, addressIndex = addressIndex)
+            }
+            val text = buildString {
+                append(coin).append(" — path: ").append(account.path).append("\n\n")
+                append("Private key: ").append(account.privateKeyHex).append("\n\n")
+                append("Public key:  ").append(account.publicKeyHex).append("\n\n")
+                if (chainType == 0) {
+                    append("Address:     ").append(account.ethAddress).append("\n")
+                } else {
+                    append("Address:     ").append(account.btcAddress).append("\n")
+                }
+                append("xpub: ").append(account.xpub).append("\n")
+                append("xprv: ").append(account.xprv).append("\n")
+            }
+            runOnUiThread { output.text = text }
+        }
+    }
+
     private fun validateAndDerive() {
         val words = mnemonicInput.text.toString().trim().split(Regex("\\s+")).filter { it.isNotEmpty() }
         val passphrase = passphraseInput.text.toString()
         thread(name = "bip39-validate") {
+            currentMnemonic = words
             val validation = Bip39.validate(words)
             val text = if (validation.startsWith("✅")) {
                 val entropy = Bip39.mnemonicToEntropy(words)
