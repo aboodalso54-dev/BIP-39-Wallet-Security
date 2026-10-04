@@ -45,7 +45,7 @@ jobs:
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         run: |
           mkdir -p "$RUNNER_TEMP/keystore"
-          printf '%s' "$KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/keystore/release.keystore"
+          printf '%s' "$KEYSTORE_BASE64" | tr -d '\n\r ' | base64 -d > "$RUNNER_TEMP/keystore/release.keystore"
           {
             echo "MYAPP_UPLOAD_STORE_FILE=$RUNNER_TEMP/keystore/release.keystore"
             echo "MYAPP_UPLOAD_STORE_PASSWORD=$KEYSTORE_PASSWORD"
