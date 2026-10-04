@@ -44,14 +44,20 @@ jobs:
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         run: |
+          set +e
           mkdir -p "$RUNNER_TEMP/keystore"
-          printf '%s' "$KEYSTORE_BASE64" | tr -d '\n\r ' | base64 -d > "$RUNNER_TEMP/keystore/release.keystore"
-          {
-            echo "MYAPP_UPLOAD_STORE_FILE=$RUNNER_TEMP/keystore/release.keystore"
-            echo "MYAPP_UPLOAD_STORE_PASSWORD=$KEYSTORE_PASSWORD"
-            echo "MYAPP_UPLOAD_KEY_ALIAS=$KEY_ALIAS"
-            echo "MYAPP_UPLOAD_KEY_PASSWORD=$KEY_PASSWORD"
-          } >> "$GITHUB_ENV"
+          if printf '%s' "$KEYSTORE_BASE64" | tr -d '\n\r ' | base64 -di > "$RUNNER_TEMP/keystore/release.keystore" 2>/dev/null &&
+             keytool -list -keystore "$RUNNER_TEMP/keystore/release.keystore" -storepass "$KEYSTORE_PASSWORD" > /dev/null 2>&1; then
+            {
+              echo "MYAPP_UPLOAD_STORE_FILE=$RUNNER_TEMP/keystore/release.keystore"
+              echo "MYAPP_UPLOAD_STORE_PASSWORD=$KEYSTORE_PASSWORD"
+              echo "MYAPP_UPLOAD_KEY_ALIAS=$KEY_ALIAS"
+              echo "MYAPP_UPLOAD_KEY_PASSWORD=$KEY_PASSWORD"
+            } >> "$GITHUB_ENV"
+            echo "Keystore restored — release APK will be signed"
+          else
+            echo "::warning::KEYSTORE_BASE64 secret is missing or invalid; building release APK with debug signing. Add a valid base64 keystore secret to get a signed release."
+          fi
 
       - name: Build release APKs
         run: |
