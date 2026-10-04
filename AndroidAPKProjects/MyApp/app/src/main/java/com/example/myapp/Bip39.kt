@@ -78,8 +78,9 @@ object Bip39 {
     fun toSeed(words: List<String>, passphrase: String = ""): ByteArray {
         val mnemonic = words.joinToString(" ") { it.lowercase() }
         val salt = "mnemonic$passphrase"
+        // BIP-39: PBKDF2-HMAC-SHA512, password = mnemonic (NFKD UTF-8), salt = "mnemonic" + passphrase
         val spec = PBEKeySpec(
-            mnemonic.toByteArray(Charsets.UTF_8),
+            mnemonic.toCharArray(),
             salt.toByteArray(Charsets.UTF_8),
             PBKDF2_ITERATIONS,
             512
