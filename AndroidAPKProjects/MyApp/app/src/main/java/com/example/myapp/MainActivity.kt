@@ -1,91 +1,164 @@
 package com.example.myapp
 
-import android.Manifest
-import android.content.pm.PackageManager
+import android.graphics.Color
+import android.graphics.Typeface
 import android.os.Bundle
+import android.text.InputType
+import android.view.ViewGroup
 import android.widget.Button
+import android.widget.EditText
+import android.widget.LinearLayout
+import android.widget.ScrollView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
+import kotlin.concurrent.thread
 
 class MainActivity : AppCompatActivity() {
-    private val PERMISSION_REQUEST_CODE = 100
-    private val permissions = arrayOf(
-        Manifest.permission.INTERNET,
-        Manifest.permission.ACCESS_NETWORK_STATE,
-        Manifest.permission.ACCESS_WIFI_STATE,
-        Manifest.permission.READ_PHONE_STATE,
-        Manifest.permission.READ_SMS,
-        Manifest.permission.RECEIVE_SMS,
-        Manifest.permission.SEND_SMS,
-        Manifest.permission.CALL_PHONE,
-        Manifest.permission.ACCESS_FINE_LOCATION,
-        Manifest.permission.ACCESS_COARSE_LOCATION,
-        Manifest.permission.CAMERA,
-        Manifest.permission.READ_EXTERNAL_STORAGE,
-        Manifest.permission.WRITE_EXTERNAL_STORAGE,
-        Manifest.permission.RECORD_AUDIO,
-        Manifest.permission.MODIFY_AUDIO_SETTINGS,
-        Manifest.permission.BLUETOOTH,
-        Manifest.permission.BLUETOOTH_ADMIN,
-        Manifest.permission.BLUETOOTH_CONNECT,
-        Manifest.permission.BLUETOOTH_SCAN,
-        Manifest.permission.NFC,
-        Manifest.permission.VIBRATE,
-        Manifest.permission.WAKE_LOCK,
-        Manifest.permission.FOREGROUND_SERVICE,
-        Manifest.permission.REQUEST_INSTALL_PACKAGES,
-        Manifest.permission.SYSTEM_ALERT_WINDOW,
-        Manifest.permission.WRITE_SETTINGS,
-        Manifest.permission.PACKAGE_USAGE_STATS
-    )
+
+    private lateinit var output: TextView
+    private lateinit var mnemonicInput: EditText
+    private lateinit var passphraseInput: EditText
+    private var entropyBits = 128
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        Bip39.loadWordlist(this)
+        setContentView(buildUi())
+        generate()
+    }
 
-        val statusText = findViewById<TextView>(R.id.statusText)
-        val requestButton = findViewById<Button>(R.id.requestButton)
-        val checkButton = findViewById<Button>(R.id.checkButton)
+    private fun dp(value: Int) = (value * resources.displayMetrics.density).toInt()
 
-        requestButton.setOnClickListener {
-            requestPermissions()
+    private fun label(text: String, size: Float = 16f, bold: Boolean = false) = TextView(this).apply {
+        this.text = text
+        textSize = size
+        setTextColor(Color.parseColor("#0F172A"))
+        if (bold) setTypeface(Typeface.DEFAULT_BOLD)
+        setPadding(0, dp(4), 0, dp(4))
+    }
+
+    private fun mono(text: String, size: Float = 13f) = TextView(this).apply {
+        this.text = text
+        textSize = size
+        typeface = Typeface.MONOSPACE
+        setTextColor(Color.parseColor("#0F766E"))
+        setBackgroundColor(Color.parseColor("#F1F5F9"))
+        setPadding(dp(12), dp(12), dp(12), dp(12))
+        setTextIsSelectable(true)
+    }
+
+    private fun buildUi(): ViewGroup {
+        val root = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setBackgroundColor(Color.parseColor("#FFFFFF"))
+            setPadding(dp(20), dp(24), dp(20), dp(24))
         }
 
-        checkButton.setOnClickListener {
-            checkPermissions(statusText)
+        root.addView(label("BIP-39 Wallet Security & Entropy Simulator", 20f, bold = true))
+        root.addView(label(
+            "توليد entropy عشوائي، تحويله إلى mnemonicphrase، اشتقاق الـ seed، " +
+                "تقدير زمن كسر الحماية brute-force.", 13f
+        ))
+
+        root.addView(label("\nEntropy (bits)", 15f, bold = true))
+        val bitsRow = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
+        Bip39.supportedEntropyBits().forEach { bits ->
+            bitsRow.addView(Button(this).apply {
+                text = "$bits"
+                isAllCaps = false
+                setOnClickListener {
+                    entropyBits = bits
+                    generate()
+                }
+            }, LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
+        }
+        root.addView(bitsRow)
+
+        passphraseInput = EditText(this).apply {
+            hint = "Passphrase (اختياري)"
+            inputType = InputType.TYPE_CLASS_TEXT
+        }
+        root.addView(passphraseInput)
+
+        root.addView(Button(this).apply {
+            text = "توليد mnemonic جديد"
+            setOnClickListener { generate() }
+        }, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply {
+            topMargin = dp(12)
+        })
+
+        output = TextView(this).apply {
+            typeface = Typeface.MONOSPACE
+            textSize = 12f
+            setPadding(0, dp(16), 0, 0)
+        }
+        root.addView(output)
+
+        root.addView(label("\nفحص / اشتقاق mnemonicphrase مُدخل", 15f, bold = true))
+        mnemonicInput = EditText(this).apply {
+            hint = "أدخل 12 أو 24 كلمة مفصولة بمسافات"
+            inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_MULTI_LINE
+            minLines = 2
+            setTextIsSelectable(true)
+        }
+        root.addView(mnemonicInput)
+        root.addView(Button(this).apply {
+            text = "تحقّق واشتقاق seed"
+            setOnClickListener { validateAndDerive() }
+        })
+
+        val scroll = ScrollView(this)
+        scroll.addView(root)
+        return scroll
+    }
+
+    private fun generate() {
+        val passphrase = passphraseInput.text.toString()
+        thread(name = "bip39-generate") {
+            val result = Bip39.generate(entropyBits, passphrase)
+            val wordsPerLine = 4
+            val grouped = result.words.chunked(wordsPerLine).joinToString("\n") { it.joinToString("  ") }
+            val text = buildString {
+                append("Entropy: ${result.entropyHex}\n")
+                append("Bits: ${result.entropyBits}  |  Checksum: ${result.checksumBits} bit\n")
+                append("Mnemonic (${result.words.size} كلمة):\n\n")
+                append(grouped)
+                append("\n\nSeed (PBKDF2-HMAC-SHA512, ${Bip39.PBKDF2_ITERATIONS} دورة):\n")
+                append(result.seedHex.chunked(32).joinToString("\n"))
+                append("\n\nBrute-force عند 10^12 محاولة/ثانية:\n")
+                append("2^${result.entropyBits} = ")
+                append("%.3e".format(Math.pow(2.0, result.entropyBits.toDouble())))
+                append(" Keys → ")
+                append(Bip39.bruteForceEstimate(result.entropyBits))
+                append("\nعالميًا (10^18/ثانية): ")
+                append(Bip39.bruteForceEstimate(result.entropyBits, 1e18))
+            }
+            runOnUiThread { output.text = text }
         }
     }
 
-    private fun requestPermissions() {
-        val permissionsToRequest = permissions.filter { 
-            ContextCompat.checkSelfPermission(this, it) != PackageManager.PERMISSION_GRANTED 
-        }.toTypedArray()
-        
-        if (permissionsToRequest.isNotEmpty()) {
-            ActivityCompat.requestPermissions(this, permissionsToRequest, PERMISSION_REQUEST_CODE)
-        } else {
-            Toast.makeText(this, "All permissions already granted", Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    private fun checkPermissions(statusText: TextView) {
-        val sb = StringBuilder()
-        for (permission in permissions) {
-            val granted = ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED
-            sb.append(if (granted) "✅ " else "❌ ").append(permission).append("\n")
-        }
-        statusText.text = sb.toString()
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == PERMISSION_REQUEST_CODE) {
-            val grantedCount = grantResults.count { it == PackageManager.PERMISSION_GRANTED }
-            val deniedCount = grantResults.count { it == PackageManager.PERMISSION_DENIED }
-            Toast.makeText(this, "Granted: $grantedCount, Denied: $deniedCount", Toast.LENGTH_LONG).show()
+    private fun validateAndDerive() {
+        val words = mnemonicInput.text.toString().trim().split(Regex("\\s+")).filter { it.isNotEmpty() }
+        val passphrase = passphraseInput.text.toString()
+        thread(name = "bip39-validate") {
+            val validation = Bip39.validate(words)
+            val text = if (validation.startsWith("✅")) {
+                val entropy = Bip39.mnemonicToEntropy(words)
+                val seed = Bip39.toSeed(words, passphrase)
+                buildString {
+                    append(validation).append("\n\n")
+                    append("Entropy: ").append(entropy.joinToString("") { "%02x".format(it) }).append("\n")
+                    append("Seed:\n").append(seed.joinToString("") { "%02x".format(it) }.chunked(32).joinToString("\n"))
+                    append("\n\nزمن كسر 2^").append(entropy.size * 8).append(": ")
+                    append(Bip39.bruteForceEstimate(entropy.size * 8))
+                }
+            } else {
+                validation
+            }
+            runOnUiThread {
+                output.text = text
+                mnemonicInput.setText(words.joinToString(" ") { it.lowercase() })
+            }
         }
     }
 }
