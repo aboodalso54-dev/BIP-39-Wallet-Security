@@ -56,6 +56,13 @@ jobs:
             exit 1
           fi
 
+      - name: Run unit tests (MyApp)
+        run: |
+          cd AndroidAPKProjects/MyApp
+          chmod +x ./gradlew
+          ./gradlew --no-daemon testDebugUnitTest
+        continue-on-error: false
+
       - name: Upload debug APKs
         uses: actions/upload-artifact@v4
         with:
