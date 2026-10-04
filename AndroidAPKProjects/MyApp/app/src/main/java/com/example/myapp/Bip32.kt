@@ -18,7 +18,7 @@ data class DerivedAccount(
 /** BIP-32 hierarchical deterministic key derivation with BIP-44 paths. */
 object Bip32 {
 
-    private const val HARDENED = 0x80000000u.toInt()
+    private val HARDENED = 0x80000000.toInt()
 
     private fun hmac512(key: ByteArray, data: ByteArray): ByteArray {
         val mac = Mac.getInstance("HmacSHA512")
@@ -78,10 +78,10 @@ object Bip32 {
         val privateKey = BigInteger(1, key)
         val pubPoint = Secp256k1.publicKey(privateKey)
         val xprv = base58Check(
-            byteArrayOf(0x04, 0x88, 0xAD, 0xE4) + toFixed32(privateKey) + chainCode + byteArrayOf(0)
+            byteArrayOf(0x04, 0x88.toByte(), 0xAD.toByte(), 0xE4.toByte()) + toFixed32(privateKey) + chainCode + byteArrayOf(0)
         )
         val xpub = base58Check(
-            byteArrayOf(0x04, 0x88, 0xB2, 0x1E) + Secp256k1.compressed(pubPoint) + chainCode + byteArrayOf(0)
+            byteArrayOf(0x04, 0x88.toByte(), 0xB2.toByte(), 0x1E.toByte()) + Secp256k1.compressed(pubPoint) + chainCode + byteArrayOf(0)
         )
 
         return DerivedAccount(
