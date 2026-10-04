@@ -44,28 +44,72 @@ jobs:
             echo "RELEASE_VERSION_CODE=$(echo "$TAG" | awk -F. '{print $1*10000 + $2*100 + $3}')" >> "$GITHUB_ENV"
           fi
 
-      - name: Restore signing keystore
-        if: env.KEYSTORE_BASE64 != ''
+      - name: Provide signing keystore
         env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
           KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         run: |
-          set +e
-          mkdir -p "$RUNNER_TEMP/keystore"
-          if printf '%s' "$KEYSTORE_BASE64" | tr -d '\n\r ' | base64 -di > "$RUNNER_TEMP/keystore/release.keystore" 2>/dev/null &&
-             keytool -list -keystore "$RUNNER_TEMP/keystore/release.keystore" -storepass "$KEYSTORE_PASSWORD" > /dev/null 2>&1; then
-            {
-              echo "MYAPP_UPLOAD_STORE_FILE=$RUNNER_TEMP/keystore/release.keystore"
-              echo "MYAPP_UPLOAD_STORE_PASSWORD=$KEYSTORE_PASSWORD"
-              echo "MYAPP_UPLOAD_KEY_ALIAS=$KEY_ALIAS"
-              echo "MYAPP_UPLOAD_KEY_PASSWORD=$KEY_PASSWORD"
-            } >> "$GITHUB_ENV"
-            echo "Keystore restored — release APK will be signed"
-          else
-            echo "::warning::KEYSTORE_BASE64 secret is missing or invalid; building release APK with debug signing. Add a valid base64 keystore secret to get a signed release."
+          set -e
+          KS="$RUNNER_TEMP/keystore/release.keystore"
+          mkdir -p "$(dirname "$KS")"
+          PASS="${KEYSTORE_PASSWORD:-android}"
+          ALIAS="${KEY_ALIAS:-my-key-alias}"
+          KPASS="${KEY_PASSWORD:-android}"
+          KEY_TAG="signing-key"
+
+          use_key() {
+            echo "MYAPP_UPLOAD_STORE_FILE=$KS" >> "$GITHUB_ENV"
+            echo "MYAPP_UPLOAD_STORE_PASSWORD=$PASS" >> "$GITHUB_ENV"
+            echo "MYAPP_UPLOAD_KEY_ALIAS=$ALIAS" >> "$GITHUB_ENV"
+            echo "MYAPP_UPLOAD_KEY_PASSWORD=$KPASS" >> "$GITHUB_ENV"
+          }
+
+          valid() {
+            [ -s "$1" ] && keytool -list -keystore "$1" -storepass "$PASS" > /dev/null 2>&1
+          }
+
+          # 1) Repository secret takes precedence
+          if [ -n "$KEYSTORE_BASE64" ]; then
+            if printf '%s' "$KEYSTORE_BASE64" | tr -d '\n\r ' | base64 -di > "$KS" 2>/dev/null && valid "$KS"; then
+              echo "Using keystore from repository secret"
+              use_key
+              exit 0
+            fi
+            echo "::warning::KEYSTORE_BASE64 secret is invalid; ignoring it"
           fi
+
+          # 2) Keystore kept as a draft-release asset (stable across runs)
+          ASSET_ID=$(gh api "repos/$REPO/releases" --paginate \
+            --jq "[.[] | select(.tag_name == \"$KEY_TAG\") | .assets[] | select(.name == \"keystore.b64\") | .id][0] // empty")
+          if [ -n "$ASSET_ID" ]; then
+            gh api "repos/$REPO/releases/assets/$ASSET_ID" -H "Accept: application/octet-stream" > "$RUNNER_TEMP/keystore/keystore.b64"
+            tr -d '\n\r ' < "$RUNNER_TEMP/keystore/keystore.b64" | base64 -di > "$KS" 2>/dev/null || true
+            if valid "$KS"; then
+              echo "Using keystore stored in draft release '$KEY_TAG'"
+              use_key
+              exit 0
+            fi
+          fi
+
+          # 3) First run: create the key once and persist it
+          keytool -genkeypair -v -keystore "$KS" -alias "$ALIAS" -keyalg RSA -keysize 2048 \
+            -validity 10000 -storepass "$PASS" -keypass "$KPASS" \
+            -dname "CN=MyApp, OU=Release, O=MyApp, L=City, ST=State, C=US" > /dev/null 2>&1
+          base64 -w 0 "$KS" > "$RUNNER_TEMP/keystore/keystore.b64"
+          if gh release view "$KEY_TAG" > /dev/null 2>&1; then
+            gh release upload "$KEY_TAG" "$RUNNER_TEMP/keystore/keystore.b64#keystore.b64" --clobber
+          else
+            gh release create "$KEY_TAG" "$RUNNER_TEMP/keystore/keystore.b64#keystore.b64" \
+              --draft --title "Signing key (do not publish)" \
+              --notes "Internal keystore used to sign release APKs. Keep this release as draft."
+          fi
+          echo "Generated and stored a new signing keystore (draft release '$KEY_TAG')"
+          echo "SHA-256: $(keytool -list -v -keystore "$KS" -storepass "$PASS" | grep SHA256 | head -1)"
+          use_key
 
       - name: Build release APK and AAB
         run: |
