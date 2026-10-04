@@ -108,7 +108,7 @@ object Bip32 {
     fun btcAccount(seed: ByteArray, accountIndex: Int = 0, change: Int = 0, addressIndex: Int = 0) =
         account(seed, "m/44'/0'/0'/$change/$addressIndex")
 
-    private const val BASE58 = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
+    private val BASE58 = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
 
     fun base58Check(payload: ByteArray): String {
         val checksum = MessageDigest.getInstance("SHA-256")
@@ -119,28 +119,18 @@ object Bip32 {
 
     private fun base58Encode(bytes: ByteArray): String {
         if (bytes.isEmpty()) return ""
-        val input = bytes.map { it.toInt() and 0xFF }.toIntArray()
-        val encoded = StringBuilder()
-        var start = 0
-        while (start < input.size && input[start] == 0) {
-            encoded.append('1')
-            start++
+        val alphabet = BASE58
+        var leadingZeros = 0
+        while (leadingZeros < bytes.size && bytes[leadingZeros].toInt() == 0) leadingZeros++
+        val value = BigInteger(1, bytes)
+        val radix = BigInteger.valueOf(58)
+        val digits = StringBuilder()
+        var current = value
+        while (current.signum() > 0) {
+            val (quotient, remainder) = current.divideAndRemainder(radix)
+            digits.append(alphabet[remainder.toInt()])
+            current = quotient
         }
-        val digits = IntArray(input.size * 2)
-        var outputStart = digits.size
-        for (i in start until input.size) {
-            var carry = input[i]
-            var j = outputStart - 1
-            while (carry != 0 || j < digits.size - 1 && digits[j] == 0) {
-                if (j < 0) break
-                carry += 256
-                digits[j] = carry % 58
-                carry /= 58
-                j--
-            }
-            outputStart = j + 1
-        }
-        for (j in outputStart until digits.size) encoded.append(BASE58[digits[j]])
-        return encoded.toString()
+        return "1".repeat(leadingZeros) + digits.reverse()
     }
 }
