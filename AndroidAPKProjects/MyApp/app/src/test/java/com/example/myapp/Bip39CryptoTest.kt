@@ -4,6 +4,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
+import java.io.File
 import java.math.BigInteger
 
 class Bip39CryptoTest {
@@ -12,7 +13,13 @@ class Bip39CryptoTest {
 
     @Before
     fun loadWordlist() {
-        Bip39.loadWordlistFrom(javaClass.classLoader!!.getResourceAsStream("assets/bip39/english.txt"))
+        val candidates = listOf(
+            File("src/main/assets/bip39/english.txt"),
+            File("app/src/main/assets/bip39/english.txt")
+        )
+        val file = candidates.firstOrNull { it.exists() }
+            ?: error("wordlist asset not found in ${File(".").absolutePath}")
+        Bip39.loadWordlistFrom(file.inputStream())
     }
 
     @Test
