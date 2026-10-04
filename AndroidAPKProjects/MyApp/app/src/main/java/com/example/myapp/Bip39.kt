@@ -78,7 +78,12 @@ object Bip39 {
     fun toSeed(words: List<String>, passphrase: String = ""): ByteArray {
         val mnemonic = words.joinToString(" ") { it.lowercase() }
         val salt = "mnemonic$passphrase"
-        val spec = PBEKeySpec(mnemonic.toCharArray(), salt.toCharArray(), PBKDF2_ITERATIONS, 512)
+        val spec = PBEKeySpec(
+            mnemonic.toByteArray(Charsets.UTF_8),
+            salt.toByteArray(Charsets.UTF_8),
+            PBKDF2_ITERATIONS,
+            512
+        )
         return SecretKeyFactory.getInstance("PBKDF2WithHmacSHA512").generateSecret(spec).encoded
     }
 
