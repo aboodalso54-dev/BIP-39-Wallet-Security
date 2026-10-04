@@ -24,7 +24,13 @@ object Bip39 {
     /** Loads the official 2048-word list from assets. Must be called once before any other method. */
     fun loadWordlist(context: Context) {
         if (cachedWordlist != null) return
-        val words = context.assets.open("bip39/english.txt").bufferedReader().useLines { lines ->
+        loadWordlistFrom(context.assets.open("bip39/english.txt"))
+    }
+
+    /** Loads the wordlist from any stream (assets on device, classpath in unit tests). */
+    fun loadWordlistFrom(stream: java.io.InputStream) {
+        if (cachedWordlist != null) return
+        val words = stream.bufferedReader().useLines { lines ->
             lines.map { it.trim() }.filter { it.isNotEmpty() }.toList()
         }
         require(words.size == 2048) { "Wordlist must contain 2048 words, found ${words.size}" }

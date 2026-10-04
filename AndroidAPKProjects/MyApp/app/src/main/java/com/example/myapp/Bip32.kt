@@ -31,6 +31,13 @@ object Bip32 {
         return MessageDigest.getInstance("RIPEMD160").digest(sha)
     }
 
+    /** RIPEMD-160 is available on Android but not on all desktop JVMs. */
+    private fun base58P2pkhOrNull(publicKey: ByteArray): String? = try {
+        base58Check(byteArrayOf(0x00) + hash160(publicKey))
+    } catch (e: java.security.NoSuchAlgorithmException) {
+        null
+    }
+
     fun toFixed32(value: BigInteger): ByteArray = Secp256k1.run { value.toFixed32() }
 
     private fun deriveChild(key: ByteArray, chainCode: ByteArray, index: Int): Pair<ByteArray, ByteArray> {
@@ -73,7 +80,7 @@ object Bip32 {
         val publicKey = Secp256k1.compressed(point)
         val ethHash = Keccak256.digest(uncompressed.copyOfRange(1, 65))
         val eth = "0x" + ethHash.copyOfRange(12, 32).joinToString("") { "%02x".format(it) }
-        val btc = base58Check(byteArrayOf(0x00) + Bip32.hash160(publicKey))
+        val btc = base58P2pkhOrNull(publicKey) ?: "غير متاح (RIPEMD-160 غير مدعوم)"
 
         val privateKey = BigInteger(1, key)
         val pubPoint = Secp256k1.publicKey(privateKey)

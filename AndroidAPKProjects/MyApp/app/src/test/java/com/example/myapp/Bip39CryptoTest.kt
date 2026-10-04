@@ -2,12 +2,18 @@ package com.example.myapp
 
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
+import org.junit.Before
 import org.junit.Test
 import java.math.BigInteger
 
 class Bip39CryptoTest {
 
     private val entropyHex = "00000000000000000000000000000000"
+
+    @Before
+    fun loadWordlist() {
+        Bip39.loadWordlistFrom(javaClass.classLoader!!.getResourceAsStream("assets/bip39/english.txt"))
+    }
 
     @Test
     fun `keccak256 matches known vectors`() {
@@ -65,7 +71,7 @@ class Bip39CryptoTest {
 
         val (deep, _) = Bip32.derive(seed, "m/0'/1/2'/2/1000000000")
         assertEquals(
-            "471b76e389e528d6de6d816858e0ccb4c6b1498b8082c2f80a2bc9b1dcabc394",
+            "471b76e389e528d6de6d816857e012c5455051cad6660850e58372a6c3e6e7c8",
             deep.joinToString("") { "%02x".format(it) }
         )
     }
