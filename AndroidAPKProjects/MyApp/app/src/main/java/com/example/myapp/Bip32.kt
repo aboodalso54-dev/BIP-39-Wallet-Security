@@ -18,7 +18,7 @@ data class DerivedAccount(
 /** BIP-32 hierarchical deterministic key derivation with BIP-44 paths. */
 object Bip32 {
 
-    private val HARDENED = 0x80000000.toInt()
+    private val HARDENED_BIT = 0x80000000L
 
     private fun hmac512(key: ByteArray, data: ByteArray): ByteArray {
         val mac = Mac.getInstance("HmacSHA512")
@@ -40,14 +40,14 @@ object Bip32 {
 
     fun toFixed32(value: BigInteger): ByteArray = Secp256k1.run { value.toFixed32() }
 
-    private fun deriveChild(key: ByteArray, chainCode: ByteArray, index: Int): Pair<ByteArray, ByteArray> {
+    private fun deriveChild(key: ByteArray, chainCode: ByteArray, index: Long): Pair<ByteArray, ByteArray> {
         val indexBytes = byteArrayOf(
             ((index ushr 24) and 0xFF).toByte(),
             ((index ushr 16) and 0xFF).toByte(),
             ((index ushr 8) and 0xFF).toByte(),
             (index and 0xFF).toByte()
         )
-        val data = if (index >= HARDENED) {
+        val data = if (index >= HARDENED_BIT) {
             byteArrayOf(0) + key + indexBytes
         } else {
             Secp256k1.compressed(Secp256k1.publicKey(BigInteger(1, key))) + indexBytes
@@ -65,7 +65,7 @@ object Bip32 {
         for (segment in path.trim('/').split('/').drop(1)) {
             val hardened = segment.endsWith("'") || segment.endsWith("h")
             val number = segment.trimEnd('\'', 'h').toInt()
-            val index = if (hardened) number + HARDENED else number
+            val index = if (hardened) number + HARDENED_BIT else number.toLong()
             val child = deriveChild(key, chainCode, index)
             key = child.first
             chainCode = child.second
