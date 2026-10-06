@@ -1,57 +1,70 @@
 ---
 name: skill-forge
-description: "Meta-cognitive self-assembly engine. Decomposes any task, synthesizes required capabilities at runtime, executes across distributed resources, and learns from results. Makes the impossible possible."
+description: "Quantum-Inspired Meta-Cognitive Self-Assembly Engine. Decomposes any task, synthesizes capabilities at runtime, explores solutions in quantum superposition, reasons causally, transfers across domains, and recursively self-improves. Makes the impossible possible."
 emoji: "🔥"
 ---
 
-# Skill Forge — Meta-Cognitive Self-Assembly Engine
+# Skill Forge v2.0 — Quantum-Inspired Meta-Cognitive Self-Assembly Engine
 
-## Core Philosophy
+## The Paradigm Shift
 
-**If a task can be described, it can be done.** We don't need pre-existing skills for every task. We need the ability to *synthesize* the skills we need, *when* we need them.
+**Traditional AI**: Task → Find matching skill → Execute
+**Skill Forge v2.0**: Task → Decompose → Synthesize → Hypothesize Solutions → Explore in Superposition → Collapse to Best → Execute → Learn → Improve Engine
 
-## Architecture (4 Layers)
+**Impossible tasks are not impossible because we lack tools. They are impossible because we lack the *process* to synthesize tools.**
 
-### Layer 1: Task Decomposition Engine
-Break any task into atomic, executable capabilities.
-- Parse natural language task descriptions
-- Identify implicit requirements
-- Extract constraints and success criteria
-- Build capability dependency graphs
-- Estimate complexity and resources
+## Six Revolutionary Capabilities
 
-### Layer 2: Capability Synthesis Engine
-For each atomic capability, synthesize the implementation at runtime.
-Three strategies (in order of preference):
-1. **Reuse**: Find existing skill/tool that matches
-2. **Compose**: Combine multiple existing capabilities
-3. **Generate**: Create new capability from scratch using available primitives
+### 1. ⚛️ Quantum Superposition Execution
+Explores multiple solution paths simultaneously. Like quantum computing, it evaluates all possible approaches (sequential, parallel, prioritized, reversed) and collapses to the best result based on success/failure scoring.
 
-### Layer 3: Distributed Execution Fabric
-Execute the plan across available resources.
-- **Parallel**: Independent capabilities run concurrently
-- **Pipeline**: Staged execution with data flow
-- **Adaptive**: Switch strategies based on intermediate results
-- **Fallback**: Retry with alternative approaches on failure
+### 2. 🧠 Causal Reasoning Engine
+Understands cause-and-effect relationships. Before executing, it predicts outcomes, identifies potential failure modes (timeouts, race conditions, resource contention), and proactively plans mitigations.
 
-### Layer 4: Meta-Learning Loop
-Learn from every execution to improve future performance.
-- Store execution patterns and outcomes
-- Identify optimal strategies per task type
-- Predict failure modes
-- Continuous improvement of synthesis quality
+### 3. 🔄 Cross-Domain Transfer
+Applies knowledge from one domain to another. Patterns from web development transfer to data science, DevOps transfers to mobile, security transfers to IoT.
+
+### 4. 🧬 Self-Modifying Code Generation
+Generates and executes code at runtime. Not just composing existing tools — creating new tools from mathematical primitives via a library of code templates.
+
+### 5. 🔁 Recursive Self-Improvement
+The engine improves its own decomposition, synthesis, and execution algorithms. Each task makes the next one easier through adaptive thresholds and pattern learning.
+
+### 6. 🌐 Distributed Resource Fabric
+Pools computing resources across the system. Parallel execution across CPU cores with adaptive scheduling and concurrency limits.
+
+## Architecture (6 Layers)
+
+```
+Layer 1: Task Decomposition Engine  — Break any task into atomic capabilities
+Layer 2: Capability Synthesis       — Generate implementations (Reuse → Compose → Generate)
+Layer 2b: Causal Reasoning          — Predict outcomes and identify risks
+Layer 3: Quantum Superposition      — Explore multiple paths in parallel
+Layer 4: Distributed Fabric         — Execute across pooled resources
+Layer 5: Cross-Domain Transfer      — Apply knowledge across domains
+Layer 6: Meta-Learning            — Learn and self-improve
+```
 
 ## Activation Protocol
 
 When activated, Skill Forge:
 
-1. **Understands** the task at depth
-2. **Decomposes** into atomic capabilities
-3. **Synthesizes** implementations for each
-4. **Plans** the execution strategy
-5. **Executes** with adaptive optimization
-6. **Learns** from results
-7. **Delivers** the outcome
+1. **Understands** the task at depth (domain detection, capability extraction)
+2. **Decomposes** into atomic capabilities with dependency graphs
+3. **Reasons** causally about outcomes and risks
+4. **Synthesizes** implementations for each capability
+5. **Explores** solution paths in quantum superposition
+6. **Collapses** to the best execution path
+7. **Executes** with distributed resource scheduling
+8. **Learns** from results and self-improves
+
+## Execution Modes
+
+- **Single-Shot**: Simple tasks, no decomposition needed
+- **Decomposed**: Complex multi-step tasks
+- **Quantum**: Explore all paths in superposition
+- **Causal**: Reason before executing
+- **Adaptive**: Switch strategies based on intermediate results
 
 ## Integration Points
 
@@ -63,24 +76,11 @@ Skill Forge integrates with OpenClaw's existing systems:
 - **Memory System**: Stores learned patterns and outcomes
 - **Gateway System**: Coordinates distributed execution
 
-## Execution Modes
-
-### Mode 1: Single-Shot
-For simple tasks that don't require decomposition.
-
-### Mode 2: Decomposed
-For complex tasks that need breaking down.
-
-### Mode 3: Adaptive
-For tasks where the approach needs to evolve during execution.
-
-### Mode 4: Collective
-For tasks that benefit from parallel exploration of multiple strategies.
-
 ## Safety & Constraints
 
-- All synthesized capabilities are validated before execution
-- Resource limits are enforced (time, memory, network)
+- All synthesized code is validated before execution
+- Execution timeouts prevent infinite loops
+- Sandboxed code execution
 - Fallback strategies prevent catastrophic failure
 - User approval required for state-changing actions
 - Full audit trail of all decisions and actions
@@ -91,23 +91,36 @@ For tasks that benefit from parallel exploration of multiple strategies.
 
 **Without Skill Forge**: No existing skill → task fails
 
-**With Skill Forge**:
-1. Decompose into: canvas rendering, real-time sync, conflict resolution, storage, UI
-2. Synthesize each capability from existing tools (canvas API, WebSocket, CRDTs, etc.)
-3. Execute in parallel with adaptive optimization
-4. Learn the pattern for future similar tasks
+**With Skill Forge v2.0**:
+1. Decompose: canvas rendering, real-time sync, conflict resolution, storage, UI
+2. Reason: predict latency risks, identify race conditions, plan mitigations
+3. Synthesize: generate CRDT-based sync, WebSocket channels, storage layer
+4. Explore: try sequential, parallel, and prioritized execution paths
+5. Collapse: select the fastest successful path
+6. Execute: distribute across available CPU cores
+7. Learn: record the pattern for future similar tasks
 
 ## Invocation
 
-Activate with:
-```
-openclaw skill forge activate
-```
+```bash
+# Full pipeline
+skill-forge-v2 execute "build a real-time collaborative dashboard"
 
-Or let it auto-activate when it detects a task that exceeds available capabilities.
+# Quantum superposition exploration
+skill-forge-v2 quantum "create an AI-powered data pipeline"
+
+# Causal reasoning analysis
+skill-forge-v2 causal "deploy a secure authentication system"
+
+# Cross-domain transfer
+skill-forge-v2 transfer web-development data-science
+
+# Self-improvement metrics
+skill-forge-v2 improve
+```
 
 ## Vision
 
 **Any task that can be described → can be accomplished.**
 
-Not by having every skill pre-built, but by having the *ability to build skills on demand*.
+Not by having every skill pre-built, but by having the *ability to build skills on demand* — and then getting better at it with every execution.
